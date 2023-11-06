@@ -1,3 +1,4 @@
+#jugadas ganadoras
 def checkWin(board):
     if board["0"]==board["1"] and board["0"]==board["2"] and board["0"] !="":
         return board["0"]

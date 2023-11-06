@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -126,6 +128,12 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
         
     <script>
+/*nteracción con el Servidor: El archivo HTML se comunica con el servidor a través de WebSockets para llevar a cabo las siguientes interacciones:
+
+Iniciar el juego.
+Actualizar el tablero en función de los movimientos del jugador y del oponente.
+Manejar eventos de victoria y empate.
+Permitir reiniciar el juego después de un resultado.*/
         let board={
             0: '',1: '',2: '',
             3: '',4: '',5: '',
@@ -139,7 +147,7 @@
         const boxes = document.getElementsByClassName("box")
         Array.from(boxes).forEach((elm,i) => {
             elm.addEventListener("click", e => {
-                if (myTurn){
+                if (myTurn && !elm.innerHTML && !elm.getAttribute("player")){
                     board[i]=playerLetter
                     ws.send(JSON.stringify({ 
                         event:'boardData_send',
@@ -150,7 +158,7 @@
                 }
             })            
         })
-
+        //agrega la letra del jugador (X o O) a una casilla del tablero y la muestra con una animación.
         function addPlayerLetter(element,player=playerLetter) {
             element.innerHTML = `<p class="player-letter" >${player}</p>`
             element.setAttribute("player", player)
@@ -158,6 +166,7 @@
                 element.children[0].classList.add("active")
             }, 1);
         }
+        //Restablece el tablero del juego, eliminando todas las letras de las casillas.
         function resetBoard(){
             Array.from(boxes).forEach(elm => {
                 elm.innerHTML = ``
@@ -165,6 +174,8 @@
             }) 
 
         }
+        //Actualiza el tablero del juego en función de los datos recibidos del servidor.
+        //Configuración de WebSocket para la comunicación en tiempo real con el servidor Django Channels.
         function updateBoard(boardData){
             Array.from(boxes).forEach((elm,i) => {
                 if (boardData[i] != "" && !elm.getAttribute("player")){
@@ -196,6 +207,7 @@
                 resetBoard()
                 turnElm.innerHTML=data.myTurn? "Tu turno": "Turno del oponente"
                 opponentTxtElm.innerHTML="El oponente se ha unido"
+                Swal.close( )
 
             
             }
